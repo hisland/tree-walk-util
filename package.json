@@ -12,6 +12,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hisland/tree-walk-util.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hisland/tree-walk-util/issues"
+  },
+  "homepage": "https://github.com/hisland/tree-walk-util",
   "author": "hisland",
   "license": "MIT"
 }
