@@ -1,10 +1,11 @@
 {
-  "name": "tree-walker",
+  "name": "tree-walk-util",
   "version": "0.0.2",
   "description": "walk through a tree data, convert from tree to list or list to tree.",
   "keywords": [
     "tree-walk",
-    "tree-walker"
+    "tree-walker",
+    "tree-walk-util"
   ],
   "main": "lib/bundle.js",
   "jsnext:main": "src/main.js",
