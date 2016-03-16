@@ -4,5 +4,7 @@ export default {
   entry: 'src/main.js',
   dest: 'lib/bundle.js',
   format: 'cjs',
-  plugins: [ babel() ]
+  plugins: [babel({
+    presets: ["es2015-rollup"]
+  })]
 };
