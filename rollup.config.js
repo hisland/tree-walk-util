@@ -5,6 +5,7 @@ export default {
   dest: 'lib/bundle.js',
   format: 'cjs',
   plugins: [babel({
+    babelrc: false,
     presets: ["es2015-rollup"]
   })]
 };
