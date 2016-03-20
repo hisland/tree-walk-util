@@ -34,7 +34,7 @@ export function treeWalkParallel(parent, fn, childrenKey = 'children') {
 }
 
 
-export function mapTreeDeep(parent, fn, childrenKey) {
+export function treeDeepToList(parent, fn, childrenKey) {
   var rs = [];
   treeWalkDeep(parent, function(...rest) {
     rs.push(fn(...rest))
@@ -42,10 +42,39 @@ export function mapTreeDeep(parent, fn, childrenKey) {
   return rs;
 }
 
-export function mapTreeParallel(parent, fn, childrenKey) {
+export function treeParallelToList(parent, fn, childrenKey) {
   var rs = [];
   treeWalkParallel(parent, function(...rest) {
     rs.push(fn(...rest))
   }, childrenKey);
   return rs;
+}
+
+export function listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'children') {
+  var rs = [];
+  treeWalkParallel(parent, function(...rest) {
+    rs.push(fn(...rest))
+  }, childrenKey);
+  return rs;
+}
+
+function treeMapInner(orgParent, fn, childrenKey, rsParent, __lv) {
+  var rs, len = orgParent[childrenKey].length;
+  if (len) {
+    rsParent[childrenKey] = [];
+  }
+
+  for (var i = 0, item; i < len; i++) {
+    item = orgParent[childrenKey][i];
+    rs = fn(item, i, orgParent, __lv);
+    rsParent[childrenKey].push(rs);
+    if (item[childrenKey]) {
+      treeMapInner(item, fn, childrenKey, rs, __lv + 1);
+    }
+  }
+
+  return rsParent;
+}
+export function treeMap(orgParent, fn, childrenKey = 'children', rsParent = {}) {
+  return treeMapInner(orgParent, fn, childrenKey, rsParent, 0);
 }
