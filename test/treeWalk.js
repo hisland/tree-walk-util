@@ -1,6 +1,5 @@
 import * as ns from '../src/main'
 
-
 var tree = {
   foo: 'bar',
   children: [{
@@ -12,11 +11,11 @@ var tree = {
   }]
 }
 
-
-ns.treeWalkDeep(tree, function(v, i, p, lv){
+ns.treeWalkDeep(tree, function(v, i, p, lv) {
   console.log(v, i, lv);
 })
 
-ns.treeWalkParallel(tree, function(v, i, p, lv){
+ns.treeWalkParallel(tree, function(v, i, p, lv) {
   console.log(v, i, lv);
 })
+

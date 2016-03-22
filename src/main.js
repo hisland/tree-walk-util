@@ -51,11 +51,34 @@ export function treeParallelToList(parent, fn, childrenKey) {
 }
 
 export function listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'children') {
-  var rs = [];
-  treeWalkParallel(parent, function(...rest) {
-    rs.push(fn(...rest))
-  }, childrenKey);
-  return rs;
+  var
+    topLevel = [], // 最顶层的list
+    map = {}, // 存放所有节点的引用, 用idKey值作为key, 所以idKey不能重复
+    mapHasChildren = {}; // 暂时用于存放有子节点的item
+
+  for (var item of list) {
+    map[item[idKey]] = item;
+
+    if (item[pidKey] !== null) {
+      if (mapHasChildren[item[pidKey]]) {
+        mapHasChildren[item[pidKey]][childrenKey].push(item);
+      } else {
+        mapHasChildren[item[pidKey]] = {
+          [childrenKey]: [item]
+        }
+      }
+    } else {
+      topLevel.push(item); // top level
+    }
+  }
+
+  for (var k in mapHasChildren) {
+    map[k][childrenKey] = mapHasChildren[k][childrenKey]; // 把暂时的放到map下
+  }
+
+  return {
+    [childrenKey]: topLevel
+  };
 }
 
 function treeMapInner(orgParent, fn, childrenKey, rsParent, __lv) {
