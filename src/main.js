@@ -33,8 +33,11 @@ export function treeWalkParallel(parent, fn, childrenKey = 'children') {
   treeWalkParallelInner(parent, fn, childrenKey, 0);
 }
 
+function returnInput(item) {
+  return item;
+}
 
-export function treeDeepToList(parent, fn, childrenKey) {
+export function treeDeepToList(parent, fn = returnInput, childrenKey) {
   var rs = [];
   treeWalkDeep(parent, function(...rest) {
     rs.push(fn(...rest))
@@ -42,7 +45,7 @@ export function treeDeepToList(parent, fn, childrenKey) {
   return rs;
 }
 
-export function treeParallelToList(parent, fn, childrenKey) {
+export function treeParallelToList(parent, fn = returnInput, childrenKey) {
   var rs = [];
   treeWalkParallel(parent, function(...rest) {
     rs.push(fn(...rest))
