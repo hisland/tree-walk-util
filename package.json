@@ -22,7 +22,7 @@
   "homepage": "https://github.com/hisland/tree-walk-util",
   "author": "hisland",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "babel-register": "^6.7.2"
   }
 }
