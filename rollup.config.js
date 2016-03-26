@@ -7,7 +7,9 @@ export default {
   dest: 'dest/bundle.js',
   format: 'cjs',
   plugins: [
-    babel(),
+    babel({
+      // "plugins": ["lodash"]
+    }),
     nodeResolve({
       jsnext: true,
       main: true,
