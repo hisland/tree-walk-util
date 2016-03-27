@@ -8,6 +8,8 @@ export default {
   format: 'cjs',
   plugins: [
     babel({
+      babelrc: false,
+      presets: ["es2015-rollup"],
       // "plugins": ["lodash"]
     }),
     nodeResolve({
