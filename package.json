@@ -23,6 +23,7 @@
   "author": "hisland",
   "license": "MIT",
   "devDependencies": {
-    "babel-register": "^6.7.2"
+    "babel-register": "^6.7.2",
+    "chai": "^3.5.0"
   }
 }

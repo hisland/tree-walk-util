@@ -2,9 +2,21 @@
 * walk through a tree data
 * convert from tree to list or list to tree.
 
-fn函数格式: (item, index, parent, level)
+`fn call signature: (item, index, parent, level)`
+parent is:
+```
+{
+  children: []
+}
+// or
+{
+  [childrenKey]: []
+}
+```
+fn **do not** walk parent, just **recursion children**
 
-treeWalkDeep:
+
+`treeWalkDeep(parent, fn, childrenKey = 'children')`:
 ```
 1o
   2o
@@ -15,9 +27,8 @@ treeWalkDeep:
   7o
 8o
 ```
-treeDeepToList: 采用 treeWalkDeep 进行转换 [1o, 2o, 3o, 4o,...8o]
 
-treeWalkParallel:
+`treeWalkParallel(parent, fn, childrenKey = 'children')`:
 ```
 1o
   4o
@@ -28,10 +39,21 @@ treeWalkParallel:
   6o
 3o
 ```
-treeParallelToList: 采用 treeWalkParallel 进行转换 [1o, 2o, 3o, 4o,...8o]
 
 
-listToTree: list item 包含parentId之类的属性
+`treeDeepToList(parent, fn = returnInput, childrenKey)`:
+
+use `treeWalkDeep` to generate list
+
+
+`treeParallelToList(parent, fn = returnInput, childrenKey)`:
+
+use `treeWalkParallel` to generate list
+
+
+`listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'children')`:
+
+list is:
 ```
 list = [
 {id: 1, pid: null},
@@ -44,12 +66,17 @@ list = [
 {id: 8, pid: null},
 ]
 ```
-
-
-
-
-
-
+will generate:
+```
+id1
+  id3
+    id6
+  id5
+    id7
+id2
+  id4
+id8
+```
 
 
 
