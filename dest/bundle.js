@@ -134,34 +134,8 @@ function listToTree(list) {
   return babelHelpers.defineProperty({}, childrenKey, topLevel);
 }
 
-function treeMapInner(orgParent, fn, childrenKey, rsParent, __lv) {
-  var rs,
-      len = orgParent[childrenKey].length;
-  if (len) {
-    rsParent[childrenKey] = [];
-  }
-
-  for (var i = 0, item; i < len; i++) {
-    item = orgParent[childrenKey][i];
-    rs = fn(item, i, orgParent, __lv);
-    rsParent[childrenKey].push(rs);
-    if (item[childrenKey]) {
-      treeMapInner(item, fn, childrenKey, rs, __lv + 1);
-    }
-  }
-
-  return rsParent;
-}
-function treeMap(orgParent, fn) {
-  var childrenKey = arguments.length <= 2 || arguments[2] === undefined ? 'children' : arguments[2];
-  var rsParent = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
-
-  return treeMapInner(orgParent, fn, childrenKey, rsParent, 0);
-}
-
 exports.treeWalkDeep = treeWalkDeep;
 exports.treeWalkParallel = treeWalkParallel;
 exports.treeDeepToList = treeDeepToList;
 exports.treeParallelToList = treeParallelToList;
 exports.listToTree = listToTree;
-exports.treeMap = treeMap;
