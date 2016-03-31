@@ -1,6 +1,7 @@
 
 * walk through a tree data
 * convert from tree to list or list to tree.
+* tree structure base on array
 
 `fn call signature: (item, index, parent, level)`
 
@@ -14,8 +15,37 @@ parent is:
   [childrenKey]: []
 }
 ```
+
 fn **do not** walk parent, just **recursion children**
 
+sample tree data:
+
+```
+var tree = {
+  children: [{
+    id: 1,
+    children: [{
+      id: 2,
+      children: [{
+        id: 3,
+        children: [{
+          id: 4
+        }]
+      }]
+    }]
+  }, {
+    id: 5,
+    children: [{
+      id: 6
+    }]
+  }, {
+    id: 7,
+    children: [{
+      id: 8
+    }]
+  }]
+}
+```
 
 `treeWalkDeep(parent, fn, childrenKey = 'children')`:
 ```
@@ -23,10 +53,10 @@ fn **do not** walk parent, just **recursion children**
   2o
     3o
       4o
-  5o
-6o
-  7o
-8o
+5o
+  6o
+7o
+  8o
 ```
 
 `treeWalkParallel(parent, fn, childrenKey = 'children')`:
@@ -34,11 +64,11 @@ fn **do not** walk parent, just **recursion children**
 1o
   4o
     7o
-     8o
-  5o
+      8o
 2o
-  6o
+  5o
 3o
+  6o
 ```
 
 
