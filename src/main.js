@@ -83,3 +83,8 @@ export function listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'ch
     [childrenKey]: topLevel
   };
 }
+
+export {
+  indentStrToTree
+}
+from './indentStr';
