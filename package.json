@@ -7,10 +7,11 @@
     "tree-walker",
     "tree-walk-util"
   ],
-  "main": "dest/bundle.js",
+  "main": "dest/bundle.cmd.js",
   "jsnext:main": "src/main.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-register"
+    "test": "mocha --compilers js:babel-register",
+    "compile": "babel-node rollup.config.js"
   },
   "repository": {
     "type": "git",
