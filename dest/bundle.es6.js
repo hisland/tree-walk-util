@@ -17,49 +17,6 @@ babelHelpers.defineProperty = function (obj, key, value) {
 
 babelHelpers;
 
-function indentStrToTree(str) {
-  var indent_size = arguments.length <= 1 || arguments[1] === undefined ? 2 : arguments[1];
-
-  var reg = /^( *)(.*)$/gm;
-  // 采用2维图的方式来处理
-  var lvs = [[]];
-  str = str.trim();
-
-  function add(blank, text) {
-    var lv = Math.ceil(blank / indent_size); // ceil, 尽可能认为是缩进
-    var obj = {
-      text: text
-    };
-
-    // 每次只缩进一层
-    if (!lvs[lv]) {
-      lvs.push([]);
-      lv = lvs.length - 1;
-    }
-
-    if (lv > 0) {
-      var lv_list = lvs[lv - 1];
-      var parent = lv_list[lv_list.length - 1];
-      if (parent.children) {
-        parent.children.push(obj);
-      } else {
-        parent.children = [obj];
-      }
-      lvs[lv].push(obj);
-    } else if (lv === 0) {
-      lvs[lv].push(obj);
-    }
-  }
-
-  str.replace(reg, function (match, blank, text) {
-    add(blank.length, text);
-  });
-
-  return {
-    children: lvs[0]
-  };
-}
-
 function treeWalkDeepInner(parent, fn, childrenKey, __lv) {
   for (var i = 0, item, len = parent[childrenKey].length; i < len; i++) {
     item = parent[childrenKey][i];
@@ -124,14 +81,17 @@ function treeParallelToList(parent) {
 
 function listToTree(list) {
   var idKey = arguments.length <= 1 || arguments[1] === undefined ? 'id' : arguments[1];
+
+  var _ref;
+
   var pidKey = arguments.length <= 2 || arguments[2] === undefined ? 'pid' : arguments[2];
   var childrenKey = arguments.length <= 3 || arguments[3] === undefined ? 'children' : arguments[3];
 
   var topLevel = [],
       // 最顶层的list
   map = {},
-      // 存放所有节点的引用, 用idKey值作为key, 所以idKey不能重复
-  mapHasChildren = {}; // 暂时用于存放有子节点的item
+      // 存放所有节点的引用, 用idKey值作为key, 所以idKey不能重复, 否则会被覆盖
+  mapHasChildren = {}; // 临时用于存放有子节点的item
 
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
@@ -169,10 +129,11 @@ function listToTree(list) {
   }
 
   for (var k in mapHasChildren) {
-    map[k][childrenKey] = mapHasChildren[k][childrenKey]; // 把暂时的放到map下
+    map[k][childrenKey] = mapHasChildren[k][childrenKey]; // 把临时的放到map下
   }
 
-  return babelHelpers.defineProperty({}, childrenKey, topLevel);
+  return _ref = {}, babelHelpers.defineProperty(_ref, childrenKey, topLevel), babelHelpers.defineProperty(_ref, 'map', map // 指向所有节点的map表
+  ), _ref;
 }
 
-export { treeWalkDeep, treeWalkParallel, treeDeepToList, treeParallelToList, listToTree, indentStrToTree };
+export { treeWalkDeep, treeWalkParallel, treeDeepToList, treeParallelToList, listToTree };
