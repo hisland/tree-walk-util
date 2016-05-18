@@ -62,7 +62,9 @@ export function listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'ch
   for (let item of list) {
     map[item[idKey]] = item;
 
-    if (item[pidKey] !== null) {
+    if (item[pidKey] === null || item[pidKey] === undefined) {
+      topLevel.push(item); // top level
+    } else {
       if (mapHasChildren[item[pidKey]]) {
         mapHasChildren[item[pidKey]][childrenKey].push(item);
       } else {
@@ -70,8 +72,6 @@ export function listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'ch
           [childrenKey]: [item]
         }
       }
-    } else {
-      topLevel.push(item); // top level
     }
   }
 
