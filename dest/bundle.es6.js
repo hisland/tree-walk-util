@@ -103,15 +103,15 @@ function listToTree(list) {
 
       map[item[idKey]] = item;
 
-      if (item[pidKey] !== null) {
-        if (mapHasChildren[item[pidKey]]) {
-          mapHasChildren[item[pidKey]][childrenKey].push(item);
-        } else {
-          mapHasChildren[item[pidKey]] = babelHelpers.defineProperty({}, childrenKey, [item]);
-        }
-      } else {
+      if (item[pidKey] === null || item[pidKey] === undefined) {
         topLevel.push(item); // top level
-      }
+      } else {
+          if (mapHasChildren[item[pidKey]]) {
+            mapHasChildren[item[pidKey]][childrenKey].push(item);
+          } else {
+            mapHasChildren[item[pidKey]] = babelHelpers.defineProperty({}, childrenKey, [item]);
+          }
+        }
     }
   } catch (err) {
     _didIteratorError = true;
