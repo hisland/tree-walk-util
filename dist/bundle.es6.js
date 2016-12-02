@@ -1,6 +1,4 @@
-var babelHelpers = {};
-
-babelHelpers.defineProperty = function (obj, key, value) {
+var defineProperty = function (obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -15,7 +13,68 @@ babelHelpers.defineProperty = function (obj, key, value) {
   return obj;
 };
 
-babelHelpers;
+var get = function get(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get(parent, property, receiver);
+    }
+  } else if ("value" in desc) {
+    return desc.value;
+  } else {
+    var getter = desc.get;
+
+    if (getter === undefined) {
+      return undefined;
+    }
+
+    return getter.call(receiver);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var set = function set(object, property, value, receiver) {
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent !== null) {
+      set(parent, property, value, receiver);
+    }
+  } else if ("value" in desc && desc.writable) {
+    desc.value = value;
+  } else {
+    var setter = desc.set;
+
+    if (setter !== undefined) {
+      setter.call(receiver, value);
+    }
+  }
+
+  return value;
+};
 
 function treeWalkDeepInner(parent, fn, childrenKey, __lv) {
   for (var i = 0, item, len = parent[childrenKey].length; i < len; i++) {
@@ -28,7 +87,7 @@ function treeWalkDeepInner(parent, fn, childrenKey, __lv) {
 }
 
 function treeWalkDeep(parent, fn) {
-  var childrenKey = arguments.length <= 2 || arguments[2] === undefined ? 'children' : arguments[2];
+  var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
 
   treeWalkDeepInner(parent, fn, childrenKey, 0);
 }
@@ -43,12 +102,12 @@ function treeWalkParallelInner(parent, fn, childrenKey, __lv) {
     }
   }
   if (next.length) {
-    treeWalkParallelInner(babelHelpers.defineProperty({}, childrenKey, next), fn, childrenKey, __lv + 1);
+    treeWalkParallelInner(defineProperty({}, childrenKey, next), fn, childrenKey, __lv + 1);
   }
 }
 
 function treeWalkParallel(parent, fn) {
-  var childrenKey = arguments.length <= 2 || arguments[2] === undefined ? 'children' : arguments[2];
+  var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
 
   treeWalkParallelInner(parent, fn, childrenKey, 0);
 }
@@ -58,7 +117,7 @@ function returnInput(item) {
 }
 
 function treeDeepToList(parent) {
-  var fn = arguments.length <= 1 || arguments[1] === undefined ? returnInput : arguments[1];
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : returnInput;
   var childrenKey = arguments[2];
 
   var rs = [];
@@ -69,7 +128,7 @@ function treeDeepToList(parent) {
 }
 
 function treeParallelToList(parent) {
-  var fn = arguments.length <= 1 || arguments[1] === undefined ? returnInput : arguments[1];
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : returnInput;
   var childrenKey = arguments[2];
 
   var rs = [];
@@ -80,12 +139,12 @@ function treeParallelToList(parent) {
 }
 
 function listToTree(list) {
-  var idKey = arguments.length <= 1 || arguments[1] === undefined ? 'id' : arguments[1];
+  var idKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
 
   var _ref;
 
-  var pidKey = arguments.length <= 2 || arguments[2] === undefined ? 'pid' : arguments[2];
-  var childrenKey = arguments.length <= 3 || arguments[3] === undefined ? 'children' : arguments[3];
+  var pidKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'pid';
+  var childrenKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'children';
 
   var topLevel = [],
       // 最顶层的list
@@ -106,12 +165,12 @@ function listToTree(list) {
       if (item[pidKey] === null || item[pidKey] === undefined) {
         topLevel.push(item); // top level
       } else {
-          if (mapHasChildren[item[pidKey]]) {
-            mapHasChildren[item[pidKey]][childrenKey].push(item);
-          } else {
-            mapHasChildren[item[pidKey]] = babelHelpers.defineProperty({}, childrenKey, [item]);
-          }
+        if (mapHasChildren[item[pidKey]]) {
+          mapHasChildren[item[pidKey]][childrenKey].push(item);
+        } else {
+          mapHasChildren[item[pidKey]] = defineProperty({}, childrenKey, [item]);
         }
+      }
     }
   } catch (err) {
     _didIteratorError = true;
@@ -132,8 +191,7 @@ function listToTree(list) {
     map[k][childrenKey] = mapHasChildren[k][childrenKey]; // 把临时的放到map下
   }
 
-  return _ref = {}, babelHelpers.defineProperty(_ref, childrenKey, topLevel), babelHelpers.defineProperty(_ref, 'map', map // 指向所有节点的map表
-  ), _ref;
+  return _ref = {}, defineProperty(_ref, childrenKey, topLevel), defineProperty(_ref, 'map', map), _ref;
 }
 
 export { treeWalkDeep, treeWalkParallel, treeDeepToList, treeParallelToList, listToTree };
