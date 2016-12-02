@@ -21,16 +21,16 @@ rollup({
     commonjs(),
   ]
 }).then(function(bundle) {
-  bundle.write({
-    dest: 'dist/bundle.es6.js',
-    format: 'es',
-  });
+  // bundle.write({
+  //   dest: 'dist/bundle.es.js',
+  //   format: 'es',
+  // });
   bundle.write({
     dest: 'dist/bundle.cmd.js',
     format: 'cjs',
   });
-  bundle.write({
-    dest: 'dist/bundle.amd.js',
-    format: 'amd',
-  });
+  // bundle.write({
+  //   dest: 'dist/bundle.amd.js',
+  //   format: 'amd',
+  // });
 })
