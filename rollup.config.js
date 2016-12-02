@@ -22,15 +22,15 @@ rollup({
   ]
 }).then(function(bundle) {
   bundle.write({
-    dest: 'dest/bundle.es6.js',
-    format: 'es6',
+    dest: 'dist/bundle.es6.js',
+    format: 'es',
   });
   bundle.write({
-    dest: 'dest/bundle.cmd.js',
+    dest: 'dist/bundle.cmd.js',
     format: 'cjs',
   });
   bundle.write({
-    dest: 'dest/bundle.amd.js',
+    dest: 'dist/bundle.amd.js',
     format: 'amd',
   });
 })
