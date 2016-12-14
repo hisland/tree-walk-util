@@ -1,6 +1,6 @@
 {
   "name": "tree-walk-util",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "walk through a tree data, convert from tree to list or list to tree.",
   "keywords": [
     "tree-walk",
