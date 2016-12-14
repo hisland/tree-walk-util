@@ -80,12 +80,18 @@ var set = function set(object, property, value, receiver) {
   return value;
 };
 
-function treeWalkDeepInner(parent, fn, childrenKey, __lv) {
+function treeWalkDeepInner(parent, fn, childrenKey) {
+  var __stopWhenFound = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+  var __lv = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+
   for (var i = 0, item, len = parent[childrenKey].length; i < len; i++) {
     item = parent[childrenKey][i];
-    fn(item, i, parent, __lv);
+    var ret = fn(item, i, parent, __lv);
+    if (__stopWhenFound && ret !== undefined) return item;
     if (item[childrenKey]) {
-      treeWalkDeepInner(item, fn, childrenKey, __lv + 1);
+      var ret2 = treeWalkDeepInner(item, fn, childrenKey, __stopWhenFound, __lv + 1);
+      if (__stopWhenFound && ret2 !== undefined) return ret2;
     }
   }
 }
@@ -93,31 +99,49 @@ function treeWalkDeepInner(parent, fn, childrenKey, __lv) {
 function treeWalkDeep(parent, fn) {
   var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
 
-  treeWalkDeepInner(parent, fn, childrenKey, 0);
+  treeWalkDeepInner(parent, fn, childrenKey);
 }
 
-function treeWalkParallelInner(parent, fn, childrenKey, __lv) {
+function treeWalkParallelInner(parent, fn, childrenKey) {
+  var __stopWhenFound = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+  var __lv = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+
   var next = [];
   for (var i = 0, item, len = parent[childrenKey].length; i < len; i++) {
     item = parent[childrenKey][i];
-    fn(item, i, parent, __lv);
+    var ret = fn(item, i, parent, __lv);
+    if (__stopWhenFound && ret !== undefined) return item;
     if (item[childrenKey]) {
       next = next.concat(item[childrenKey]);
     }
   }
   if (next.length) {
-    treeWalkParallelInner(defineProperty({}, childrenKey, next), fn, childrenKey, __lv + 1);
+    var ret2 = treeWalkParallelInner(defineProperty({}, childrenKey, next), fn, childrenKey, __stopWhenFound, __lv + 1);
+    if (__stopWhenFound && ret2 !== undefined) return ret2;
   }
 }
 
 function treeWalkParallel(parent, fn) {
   var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
 
-  treeWalkParallelInner(parent, fn, childrenKey, 0);
+  treeWalkParallelInner(parent, fn, childrenKey);
 }
 
 function returnInput(item) {
   return item;
+}
+
+function treeWalkDeepFind(parent, fn) {
+  var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+
+  return treeWalkDeepInner(parent, fn, childrenKey, true);
+}
+
+function treeWalkParallelFind(parent, fn) {
+  var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+
+  return treeWalkParallelInner(parent, fn, childrenKey, true);
 }
 
 function treeDeepToList(parent) {
@@ -200,6 +224,9 @@ function listToTree(list) {
 
 exports.treeWalkDeep = treeWalkDeep;
 exports.treeWalkParallel = treeWalkParallel;
+exports.treeWalkDeepFind = treeWalkDeepFind;
+exports.treeWalkFind = treeWalkDeepFind;
+exports.treeWalkParallelFind = treeWalkParallelFind;
 exports.treeDeepToList = treeDeepToList;
 exports.treeParallelToList = treeParallelToList;
 exports.listToTree = listToTree;
