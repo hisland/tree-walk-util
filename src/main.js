@@ -1,40 +1,53 @@
-function treeWalkDeepInner(parent, fn, childrenKey, __lv) {
+function treeWalkDeepInner(parent, fn, childrenKey, __stopWhenFound = false, __lv = 0) {
   for (let i = 0, item, len = parent[childrenKey].length; i < len; i++) {
     item = parent[childrenKey][i];
-    fn(item, i, parent, __lv);
+    let ret = fn(item, i, parent, __lv);
+    if (__stopWhenFound && ret !== undefined) return item;
     if (item[childrenKey]) {
-      treeWalkDeepInner(item, fn, childrenKey, __lv + 1);
+      let ret2 = treeWalkDeepInner(item, fn, childrenKey, __stopWhenFound, __lv + 1);
+      if (__stopWhenFound && ret2 !== undefined) return ret2;
     }
   }
 }
 
 export function treeWalkDeep(parent, fn, childrenKey = 'children') {
-  treeWalkDeepInner(parent, fn, childrenKey, 0);
+  treeWalkDeepInner(parent, fn, childrenKey);
 }
 
-
-function treeWalkParallelInner(parent, fn, childrenKey, __lv) {
+function treeWalkParallelInner(parent, fn, childrenKey, __stopWhenFound = false, __lv = 0) {
   let next = [];
   for (let i = 0, item, len = parent[childrenKey].length; i < len; i++) {
     item = parent[childrenKey][i];
-    fn(item, i, parent, __lv);
+    let ret = fn(item, i, parent, __lv);
+    if (__stopWhenFound && ret !== undefined) return item;
     if (item[childrenKey]) {
       next = next.concat(item[childrenKey]);
     }
   }
   if (next.length) {
-    treeWalkParallelInner({
+    let ret2 = treeWalkParallelInner({
       [childrenKey]: next
-    }, fn, childrenKey, __lv + 1);
+    }, fn, childrenKey, __stopWhenFound, __lv + 1);
+    if (__stopWhenFound && ret2 !== undefined) return ret2;
   }
 }
 
 export function treeWalkParallel(parent, fn, childrenKey = 'children') {
-  treeWalkParallelInner(parent, fn, childrenKey, 0);
+  treeWalkParallelInner(parent, fn, childrenKey);
 }
 
 function returnInput(item) {
   return item;
+}
+
+export function treeWalkDeepFind(parent, fn, childrenKey = 'children') {
+  return treeWalkDeepInner(parent, fn, childrenKey, true);
+}
+
+export { treeWalkDeepFind as treeWalkFind } // walkFind 默认用 Deep 模式
+
+export function treeWalkParallelFind(parent, fn, childrenKey = 'children') {
+  return treeWalkParallelInner(parent, fn, childrenKey, true);
 }
 
 export function treeDeepToList(parent, fn = returnInput, childrenKey) {
@@ -84,3 +97,4 @@ export function listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'ch
     map // 指向所有节点的map表
   };
 }
+
