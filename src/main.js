@@ -1,100 +1,140 @@
-function treeWalkDeepInner(parent, fn, childrenKey, __stopWhenFound = false, __lv = 0) {
+function treeWalkDeepInner(
+  parent,
+  fn,
+  childrenKey = 'children',
+  __stopWhenFound = false,
+  __lv = 0
+) {
   for (let i = 0, item, len = parent[childrenKey].length; i < len; i++) {
-    item = parent[childrenKey][i];
-    let ret = fn(item, i, parent, __lv);
-    if (__stopWhenFound && ret !== undefined) return item;
+    item = parent[childrenKey][i]
+    let ret = fn(item, i, parent, __lv)
+    if (__stopWhenFound && ret !== undefined) return item
     if (item[childrenKey]) {
-      let ret2 = treeWalkDeepInner(item, fn, childrenKey, __stopWhenFound, __lv + 1);
-      if (__stopWhenFound && ret2 !== undefined) return ret2;
+      let ret2 = treeWalkDeepInner(
+        item,
+        fn,
+        childrenKey,
+        __stopWhenFound,
+        __lv + 1
+      )
+      if (__stopWhenFound && ret2 !== undefined) return ret2
     }
   }
 }
 
-export function treeWalkDeep(parent, fn, childrenKey = 'children') {
-  treeWalkDeepInner(parent, fn, childrenKey);
+export function treeWalkDeep(parent, fn, childrenKey) {
+  treeWalkDeepInner(parent, fn, childrenKey, false)
 }
 
-function treeWalkParallelInner(parent, fn, childrenKey, __stopWhenFound = false, __lv = 0) {
-  let next = [];
+export function treeWalkDeepFind(parent, fn, childrenKey) {
+  return treeWalkDeepInner(parent, fn, childrenKey, true)
+}
+
+function treeWalkParallelInner(
+  parent,
+  fn,
+  childrenKey = 'children',
+  __stopWhenFound = false,
+  __lv = 0
+) {
+  let next = []
   for (let i = 0, item, len = parent[childrenKey].length; i < len; i++) {
-    item = parent[childrenKey][i];
-    let ret = fn(item, i, parent, __lv);
-    if (__stopWhenFound && ret !== undefined) return item;
+    item = parent[childrenKey][i]
+    let ret = fn(item, i, parent, __lv)
+    if (__stopWhenFound && ret !== undefined) return item
     if (item[childrenKey]) {
-      next = next.concat(item[childrenKey]);
+      next = next.concat(item[childrenKey])
     }
   }
   if (next.length) {
-    let ret2 = treeWalkParallelInner({
-      [childrenKey]: next
-    }, fn, childrenKey, __stopWhenFound, __lv + 1);
-    if (__stopWhenFound && ret2 !== undefined) return ret2;
+    let ret2 = treeWalkParallelInner(
+      {
+        [childrenKey]: next,
+      },
+      fn,
+      childrenKey,
+      __stopWhenFound,
+      __lv + 1
+    )
+    if (__stopWhenFound && ret2 !== undefined) return ret2
   }
 }
 
-export function treeWalkParallel(parent, fn, childrenKey = 'children') {
-  treeWalkParallelInner(parent, fn, childrenKey);
+export function treeWalkParallel(parent, fn, childrenKey) {
+  treeWalkParallelInner(parent, fn, childrenKey, false)
+}
+
+export function treeWalkParallelFind(parent, fn, childrenKey) {
+  return treeWalkParallelInner(parent, fn, childrenKey, true)
 }
 
 function returnInput(item) {
-  return item;
-}
-
-export function treeWalkDeepFind(parent, fn, childrenKey = 'children') {
-  return treeWalkDeepInner(parent, fn, childrenKey, true);
-}
-
-export { treeWalkDeepFind as treeWalkFind } // walkFind 默认用 Deep 模式
-
-export function treeWalkParallelFind(parent, fn, childrenKey = 'children') {
-  return treeWalkParallelInner(parent, fn, childrenKey, true);
+  return item
 }
 
 export function treeDeepToList(parent, fn = returnInput, childrenKey) {
-  let rs = [];
-  treeWalkDeep(parent, function(...rest) {
-    rs.push(fn(...rest))
-  }, childrenKey);
-  return rs;
+  let rs = []
+  treeWalkDeep(
+    parent,
+    function(...rest) {
+      rs.push(fn(...rest))
+    },
+    childrenKey
+  )
+  return rs
 }
 
 export function treeParallelToList(parent, fn = returnInput, childrenKey) {
-  let rs = [];
-  treeWalkParallel(parent, function(...rest) {
-    rs.push(fn(...rest))
-  }, childrenKey);
-  return rs;
+  let rs = []
+  treeWalkParallel(
+    parent,
+    function(...rest) {
+      rs.push(fn(...rest))
+    },
+    childrenKey
+  )
+  return rs
 }
 
-export function listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'children') {
-  let
-    topLevel = [], // 最顶层的list
-    map = {}, // 存放所有节点的引用, 用idKey值作为key, 所以idKey不能重复, 否则会被覆盖
-    mapHasChildren = {}; // 临时用于存放有子节点的item
+export function listToTree(
+  list,
+  idKey = 'id',
+  pidKey = 'pid',
+  childrenKey = 'children'
+) {
+  let topLevel = [], // 最顶层的list
+    allMap = {}, // 存放所有节点的引用, 用idKey值作为key, 所以idKey不能重复, 否则会被覆盖
+    loop2 = [] // 临时用于存放有子节点的item
 
-  for (let item of list) {
-    map[item[idKey]] = item;
+  for (let ii = 0, len = list.length; ii < len; ii++) {
+    let item = list[ii]
+
+    allMap[item[idKey]] = item
 
     if (item[pidKey] === null || item[pidKey] === undefined) {
-      topLevel.push(item); // top level
+      topLevel.push(item) // 没有父节点设置为顶层
     } else {
-      if (mapHasChildren[item[pidKey]]) {
-        mapHasChildren[item[pidKey]][childrenKey].push(item);
-      } else {
-        mapHasChildren[item[pidKey]] = {
-          [childrenKey]: [item]
-        }
-      }
+      loop2.push(item)
     }
   }
 
-  for (let k in mapHasChildren) {
-    map[k][childrenKey] = mapHasChildren[k][childrenKey]; // 把临时的放到map下
+  for (let ii = 0, len = loop2.length; ii < len; ii++) {
+    let item = loop2[ii]
+
+    let parent = allMap[item[pidKey]]
+    if (parent) {
+      if (parent[childrenKey]) {
+        parent[childrenKey].push(item)
+      } else {
+        parent[childrenKey] = [item]
+      }
+    } else {
+      topLevel.push(item) // 父节点 不存在也设置为顶层
+    }
   }
 
   return {
     [childrenKey]: topLevel,
-    map // 指向所有节点的map表
-  };
+    map: allMap, // 指向所有节点的map表
+  }
 }
-
