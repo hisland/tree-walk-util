@@ -26,8 +26,13 @@ rollup({
   //   format: 'es',
   // });
   bundle.write({
-    dest: 'dist/bundle.cmd.js',
+    dest: 'dist/bundle.cjs.js',
     format: 'cjs',
+  });
+  bundle.write({
+    dest: 'dist/bundle.umd.js',
+    format: 'umd',
+    moduleName: 'treeWalkUtil',
   });
   // bundle.write({
   //   dest: 'dist/bundle.amd.js',
