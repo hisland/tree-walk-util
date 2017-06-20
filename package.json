@@ -5,7 +5,9 @@
   "keywords": [
     "tree-walk",
     "tree-walker",
-    "tree-walk-util"
+    "tree-walk-util",
+    "tree-to-list",
+    "list-to-tree",
   ],
   "main": "dist/bundle.cjs.js",
   "jsnext:main": "src/main.js",
