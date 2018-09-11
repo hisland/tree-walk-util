@@ -5,9 +5,9 @@ function treeWalkDeepInner(
   __stopWhenFound = false,
   __lv = 0
 ) {
-  for (let i = 0, item, len = parent[childrenKey].length; i < len; i++) {
-    item = parent[childrenKey][i]
-    let ret = fn(item, i, parent, __lv)
+  for (let ii1 = 0, item, len = parent[childrenKey].length; ii1 < len; ii1++) {
+    item = parent[childrenKey][ii1]
+    let ret = fn(item, ii1, parent, __lv)
     if (__stopWhenFound && ret !== undefined) return item
     if (item[childrenKey]) {
       let ret2 = treeWalkDeepInner(
@@ -38,9 +38,9 @@ function treeWalkParallelInner(
   __lv = 0
 ) {
   let next = []
-  for (let i = 0, item, len = parent[childrenKey].length; i < len; i++) {
-    item = parent[childrenKey][i]
-    let ret = fn(item, i, parent, __lv)
+  for (let ii2 = 0, item, len = parent[childrenKey].length; ii2 < len; ii2++) {
+    item = parent[childrenKey][ii2]
+    let ret = fn(item, ii2, parent, __lv)
     if (__stopWhenFound && ret !== undefined) return item
     if (item[childrenKey]) {
       next = next.concat(item[childrenKey])
