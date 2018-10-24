@@ -18,17 +18,18 @@ const oldTree = {
   ],
 }
 
-it('treeDeepToList', () => {
+test('treeDeepToList', () => {
   const list = treeDeepToList(oldTree)
-  expect(list[0].some).to.equal('thing')
-  expect(list[1]).to.equal('a')
-  expect(list[2]).to.equal('b')
-  expect(list[3].yes).to.equal('ok')
+  expect(list[0].some).toEqual('thing')
+  expect(list[1]).toEqual('a')
+  expect(list[2]).toEqual('b')
+  expect(list[3].yes).toEqual('ok')
 })
-it('treeParallelToList', () => {
+
+test('treeParallelToList', () => {
   const list = treeParallelToList(oldTree)
-  expect(list[0].some).to.equal('thing')
-  expect(list[1].yes).to.equal('ok')
-  expect(list[2]).to.equal('a')
-  expect(list[3]).to.equal('b')
+  expect(list[0].some).toEqual('thing')
+  expect(list[1].yes).toEqual('ok')
+  expect(list[2]).toEqual('a')
+  expect(list[3]).toEqual('b')
 })

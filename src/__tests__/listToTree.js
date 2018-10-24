@@ -27,22 +27,47 @@ const oldList = [
     god: 'may',
   },
 ]
+
 test('listToTree', () => {
   const newTree = listToTree(oldList)
-  expect(newTree.children[0].id).to.equal(1)
-  expect(newTree.children[0].god).to.equal('cc')
 
-  expect(newTree.children[0].children[0].id).to.equal(2)
-  expect(newTree.children[0].children[0].god).to.equal('yes')
+  expect(newTree.children[0].id).toEqual(1)
+  expect(newTree.children[0].god).toEqual('cc')
 
-  expect(newTree.children[0].children[1].id).to.equal(3)
-  expect(newTree.children[0].children[1].god).to.equal('test')
+  expect(newTree.children[0].children[0].id).toEqual(2)
+  expect(newTree.children[0].children[0].god).toEqual('yes')
 
-  expect(newTree.children[0].children[0].children[0].id).to.equal(4)
-  expect(newTree.children[0].children[0].children[0].god).to.equal('hao')
+  expect(newTree.children[0].children[1].id).toEqual(3)
+  expect(newTree.children[0].children[1].god).toEqual('test')
 
-  expect(newTree.children[0].children[1].children[0].id).to.equal(5)
-  expect(newTree.children[0].children[1].children[0].god).to.equal('may')
+  expect(newTree.children[0].children[0].children[0].id).toEqual(4)
+  expect(newTree.children[0].children[0].children[0].god).toEqual('hao')
 
-  expect(newTree.children[1]).to.be.undefined
+  expect(newTree.children[0].children[1].children[0].id).toEqual(5)
+  expect(newTree.children[0].children[1].children[0].god).toEqual('may')
+
+  expect(newTree.children[1]).toBeUndefined()
 })
+
+// 下面是目标结果
+// const outTree = [
+//   {
+//     id: 1,
+//     pid: null,
+//     god: 'cc',
+//     children: [
+//       {
+//         id: 2,
+//         pid: 1,
+//         god: 'yes',
+//         children: [{ id: 4, pid: 2, god: 'hao' }],
+//       },
+//       {
+//         id: 3,
+//         pid: 1,
+//         god: 'test',
+//         children: [{ id: 5, pid: 3, god: 'may' }],
+//       },
+//     ],
+//   },
+// ]
