@@ -1,6 +1,6 @@
 {
   "name": "tree-walk-util",
-  "version": "0.8.0",
+  "version": "2.0.0",
   "description": "walk through a tree data, convert from tree to list or list to tree.",
   "keywords": [
     "tree-walk",
@@ -10,7 +10,7 @@
     "list-to-tree"
   ],
   "main": "dist/bundle.cjs.js",
-  "jsnext:main": "src/main.js",
+  "jsnext:main": "src/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register",
     "compile": "babel-node rollup.config.js"

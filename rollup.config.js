@@ -4,7 +4,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import { rollup } from 'rollup'
 
 rollup({
-  entry: 'src/main.js',
+  entry: 'src/index.js',
   plugins: [
     babel({
       babelrc: false,
