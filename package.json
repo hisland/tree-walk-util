@@ -1,6 +1,6 @@
 {
   "name": "tree-walk-util",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "walk through a tree data, convert from tree to list or list to tree.",
   "keywords": [
     "tree-walk",
@@ -12,8 +12,8 @@
   "main": "dist/bundle.cjs.js",
   "jsnext:main": "src/index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-register",
-    "compile": "babel-node rollup.config.js"
+    "test": "jest",
+    "compile": "rm -rf dist; rollup -c rollup.config.js"
   },
   "repository": {
     "type": "git",
@@ -26,15 +26,10 @@
   "author": "hisland",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
-    "babel-register": "^6.18.0",
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "rollup": "^0.37.0",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-commonjs": "^6.0.0",
-    "rollup-plugin-node-resolve": "^2.0.0"
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "jest": "^23.6.0",
+    "rollup": "^0.66.6",
+    "rollup-plugin-babel": "^4.0.3"
   }
 }

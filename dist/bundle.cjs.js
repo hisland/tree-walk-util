@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var defineProperty = function (obj, key, value) {
+function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -15,201 +15,157 @@ var defineProperty = function (obj, key, value) {
   }
 
   return obj;
+}
+
+var getParentObj = function getParentObj(parent, childrenKey) {
+  return Array.isArray(parent) ? _defineProperty({}, childrenKey, parent) : parent;
 };
 
-var get = function get(object, property, receiver) {
-  if (object === null) object = Function.prototype;
-  var desc = Object.getOwnPropertyDescriptor(object, property);
-
-  if (desc === undefined) {
-    var parent = Object.getPrototypeOf(object);
-
-    if (parent === null) {
-      return undefined;
-    } else {
-      return get(parent, property, receiver);
-    }
-  } else if ("value" in desc) {
-    return desc.value;
-  } else {
-    var getter = desc.get;
-
-    if (getter === undefined) {
-      return undefined;
-    }
-
-    return getter.call(receiver);
-  }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var set = function set(object, property, value, receiver) {
-  var desc = Object.getOwnPropertyDescriptor(object, property);
-
-  if (desc === undefined) {
-    var parent = Object.getPrototypeOf(object);
-
-    if (parent !== null) {
-      set(parent, property, value, receiver);
-    }
-  } else if ("value" in desc && desc.writable) {
-    desc.value = value;
-  } else {
-    var setter = desc.set;
-
-    if (setter !== undefined) {
-      setter.call(receiver, value);
-    }
-  }
-
-  return value;
-};
-
-function treeWalkDeepInner(parent, fn) {
-  var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
-
-  var __stopWhenFound = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
+function treeWalkDeepInner(parentObj, iterFn, childrenKey, __stopWhenFound) {
   var __lv = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
 
-  for (var i = 0, item, len = parent[childrenKey].length; i < len; i++) {
-    item = parent[childrenKey][i];
-    var ret = fn(item, i, parent, __lv);
-    if (__stopWhenFound && ret !== undefined) return item;
+  var parentList = parentObj[childrenKey];
+  var maxLen = parentList.length;
+
+  for (var ii1 = 0; ii1 < maxLen; ii1++) {
+    var item = parentList[ii1];
+    var ret1 = iterFn(item, ii1, parentList, parentObj, __lv);
+    if (__stopWhenFound && ret1 !== undefined) return item;
+
     if (item[childrenKey]) {
-      var ret2 = treeWalkDeepInner(item, fn, childrenKey, __stopWhenFound, __lv + 1);
+      var ret2 = treeWalkDeepInner(item, iterFn, childrenKey, __stopWhenFound, __lv + 1);
       if (__stopWhenFound && ret2 !== undefined) return ret2;
     }
   }
 }
 
-function treeWalkDeep(parent, fn, childrenKey) {
-  treeWalkDeepInner(parent, fn, childrenKey, false);
-}
-
-function treeWalkDeepFind(parent, fn, childrenKey) {
-  return treeWalkDeepInner(parent, fn, childrenKey, true);
-}
-
-function treeWalkParallelInner(parent, fn) {
+function treeWalkDeep(parent, iterFn) {
   var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+  var parentObj = getParentObj(parent, childrenKey);
+  treeWalkDeepInner(parentObj, iterFn, childrenKey, false);
+}
+function treeDeepFind(parent, iterFn) {
+  var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+  var parentObj = getParentObj(parent, childrenKey);
+  return treeWalkDeepInner(parentObj, iterFn, childrenKey, true);
+}
 
-  var __stopWhenFound = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
+function treeWalkParallelInner(parentObj, iterFn, childrenKey, __stopWhenFound) {
   var __lv = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
 
-  var next = [];
-  for (var i = 0, item, len = parent[childrenKey].length; i < len; i++) {
-    item = parent[childrenKey][i];
-    var ret = fn(item, i, parent, __lv);
-    if (__stopWhenFound && ret !== undefined) return item;
+  var parentList = parentObj[childrenKey];
+  var maxLen = parentList.length;
+  var subList = [];
+
+  for (var ii2 = 0; ii2 < maxLen; ii2++) {
+    var item = parentList[ii2];
+    var ret1 = iterFn(item, ii2, parentList, parentObj, __lv);
+    if (__stopWhenFound && ret1 !== undefined) return item;
+
     if (item[childrenKey]) {
-      next = next.concat(item[childrenKey]);
+      subList = subList.concat(item[childrenKey]);
     }
   }
-  if (next.length) {
-    var ret2 = treeWalkParallelInner(defineProperty({}, childrenKey, next), fn, childrenKey, __stopWhenFound, __lv + 1);
+
+  if (subList.length) {
+    var ret2 = treeWalkParallelInner(_defineProperty({}, childrenKey, subList), iterFn, childrenKey, __stopWhenFound, __lv + 1);
     if (__stopWhenFound && ret2 !== undefined) return ret2;
   }
 }
 
-function treeWalkParallel(parent, fn, childrenKey) {
-  treeWalkParallelInner(parent, fn, childrenKey, false);
+function treeWalkParallel(parent, iterFn) {
+  var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+  var parentObj = getParentObj(parent, childrenKey);
+  treeWalkParallelInner(parentObj, iterFn, childrenKey, false);
+}
+function treeParallelFind(parent, iterFn) {
+  var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+  var parentObj = getParentObj(parent, childrenKey);
+  return treeWalkParallelInner(parentObj, iterFn, childrenKey, true);
 }
 
-function treeWalkParallelFind(parent, fn, childrenKey) {
-  return treeWalkParallelInner(parent, fn, childrenKey, true);
-}
-
-function returnInput(item) {
-  return item;
-}
-
-function treeDeepToList(parent) {
-  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : returnInput;
-  var childrenKey = arguments[2];
-
+function treeDeepToList(parent, childrenKey) {
   var rs = [];
-  treeWalkDeep(parent, function () {
-    rs.push(fn.apply(undefined, arguments));
+  treeWalkDeep(parent, function (item) {
+    rs.push(item);
+  }, childrenKey);
+  return rs;
+}
+function treeParallelToList(parent, childrenKey) {
+  var rs = [];
+  treeWalkParallel(parent, function (item) {
+    rs.push(item);
   }, childrenKey);
   return rs;
 }
 
-function treeParallelToList(parent) {
-  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : returnInput;
-  var childrenKey = arguments[2];
-
-  var rs = [];
-  treeWalkParallel(parent, function () {
-    rs.push(fn.apply(undefined, arguments));
-  }, childrenKey);
-  return rs;
-}
-
-function listToTree(list) {
-  var idKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
-
+function listToTree(rawList) {
   var _ref;
 
+  var idKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
   var pidKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'pid';
   var childrenKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'children';
+  var topLevelList = []; // 最顶层的list
 
-  var topLevel = [],
-      // 最顶层的list
-  allMap = {},
-      // 存放所有节点的引用, 用idKey值作为key, 所以idKey不能重复, 否则会被覆盖
-  loop2 = []; // 临时用于存放有子节点的item
+  var allMapById = {}; // 存放所有节点的引用, 用idKey值作为key, 所以idKey不能重复, 否则会被覆盖
 
-  for (var ii = 0, len = list.length; ii < len; ii++) {
-    var item = list[ii];
+  var loopList2 = []; // 临时用于存放有子节点的item
+  // 第 1 轮循环, 用 1 个 map 挂所有节点, 并找到顶级节点列表
 
-    allMap[item[idKey]] = item;
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
 
-    if (item[pidKey] === null || item[pidKey] === undefined) {
-      topLevel.push(item); // 没有父节点设置为顶层
-    } else {
-      loop2.push(item);
+  try {
+    for (var _iterator = rawList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var item1 = _step.value;
+      allMapById[item1[idKey]] = item1;
+
+      if (item1[pidKey] === null || item1[pidKey] === undefined) {
+        topLevelList.push(item1); // 没有父节点设置为顶层
+      } else {
+        loopList2.push(item1);
+      }
+    } // 第 2 轮循环
+
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return != null) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
     }
   }
 
-  for (var _ii = 0, _len = loop2.length; _ii < _len; _ii++) {
-    var _item = loop2[_ii];
+  for (var _i = 0; _i < loopList2.length; _i++) {
+    var item2 = loopList2[_i];
+    var parent = allMapById[item2[pidKey]];
 
-    var parent = allMap[_item[pidKey]];
     if (parent) {
       if (parent[childrenKey]) {
-        parent[childrenKey].push(_item);
+        parent[childrenKey].push(item2); // 把自己推入父列表
       } else {
-        parent[childrenKey] = [_item];
+        parent[childrenKey] = [item2]; // 父列表不存在, 创建并推入
       }
     } else {
-      topLevel.push(_item); // 父节点 不存在也设置为顶层
+      topLevelList.push(item2); // 父节点不存在, 也设置为顶层
     }
   }
 
-  return _ref = {}, defineProperty(_ref, childrenKey, topLevel), defineProperty(_ref, 'map', allMap), _ref;
+  return _ref = {}, _defineProperty(_ref, childrenKey, topLevelList), _defineProperty(_ref, "map", allMapById), _ref;
 }
 
 exports.treeWalkDeep = treeWalkDeep;
-exports.treeWalkDeepFind = treeWalkDeepFind;
+exports.treeDeepFind = treeDeepFind;
 exports.treeWalkParallel = treeWalkParallel;
-exports.treeWalkParallelFind = treeWalkParallelFind;
+exports.treeParallelFind = treeParallelFind;
 exports.treeDeepToList = treeDeepToList;
+exports.treeToList = treeDeepToList;
 exports.treeParallelToList = treeParallelToList;
 exports.listToTree = listToTree;
