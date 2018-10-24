@@ -2,7 +2,7 @@
 * convert tree -> list
 * convert list -> tree
 
-1. treeWalkDeep, treeWalkParallel:
+## 1. treeWalkDeep, treeWalkParallel:
 
 ```
 const treeData = {
@@ -57,7 +57,7 @@ treeWalkParallel(parent, function (item, index, parentList, parentObj, level) {
 ```
 
 
-2. listToTree :
+## 2. listToTree :
 ```
 rawList = [
   {id: 1, pid: null},
