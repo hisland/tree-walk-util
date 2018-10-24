@@ -6,7 +6,7 @@ export default [
     plugins: [
       babel({
         babelrc: false,
-        presets: [['@babel/preset-env', { modules: false }]],
+        presets: [['babel-preset-es2015-rollup']],
       }),
     ],
     output: [

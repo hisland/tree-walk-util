@@ -4,7 +4,7 @@
   (factory((global.treeWalkUtil = {})));
 }(this, (function (exports) { 'use strict';
 
-  function _defineProperty(obj, key, value) {
+  var defineProperty = function (obj, key, value) {
     if (key in obj) {
       Object.defineProperty(obj, key, {
         value: value,
@@ -17,10 +17,10 @@
     }
 
     return obj;
-  }
+  };
 
   var getParentObj = function getParentObj(parent, childrenKey) {
-    return Array.isArray(parent) ? _defineProperty({}, childrenKey, parent) : parent;
+    return Array.isArray(parent) ? defineProperty({}, childrenKey, parent) : parent;
   };
 
   function treeWalkDeepInner(parentObj, iterFn, childrenKey, __stopWhenFound) {
@@ -33,7 +33,6 @@
       var item = parentList[ii1];
       var ret1 = iterFn(item, ii1, parentList, parentObj, __lv);
       if (__stopWhenFound && ret1 !== undefined) return item;
-
       if (item[childrenKey]) {
         var ret2 = treeWalkDeepInner(item, iterFn, childrenKey, __stopWhenFound, __lv + 1);
         if (__stopWhenFound && ret2 !== undefined) return ret2;
@@ -43,11 +42,14 @@
 
   function treeWalkDeep(parent, iterFn) {
     var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+
     var parentObj = getParentObj(parent, childrenKey);
     treeWalkDeepInner(parentObj, iterFn, childrenKey, false);
   }
+
   function treeDeepFind(parent, iterFn) {
     var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+
     var parentObj = getParentObj(parent, childrenKey);
     return treeWalkDeepInner(parentObj, iterFn, childrenKey, true);
   }
@@ -57,31 +59,32 @@
 
     var parentList = parentObj[childrenKey];
     var maxLen = parentList.length;
-    var subList = [];
 
+    var subList = [];
     for (var ii2 = 0; ii2 < maxLen; ii2++) {
       var item = parentList[ii2];
       var ret1 = iterFn(item, ii2, parentList, parentObj, __lv);
       if (__stopWhenFound && ret1 !== undefined) return item;
-
       if (item[childrenKey]) {
         subList = subList.concat(item[childrenKey]);
       }
     }
-
     if (subList.length) {
-      var ret2 = treeWalkParallelInner(_defineProperty({}, childrenKey, subList), iterFn, childrenKey, __stopWhenFound, __lv + 1);
+      var ret2 = treeWalkParallelInner(defineProperty({}, childrenKey, subList), iterFn, childrenKey, __stopWhenFound, __lv + 1);
       if (__stopWhenFound && ret2 !== undefined) return ret2;
     }
   }
 
   function treeWalkParallel(parent, iterFn) {
     var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+
     var parentObj = getParentObj(parent, childrenKey);
     treeWalkParallelInner(parentObj, iterFn, childrenKey, false);
   }
+
   function treeParallelFind(parent, iterFn) {
     var childrenKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'children';
+
     var parentObj = getParentObj(parent, childrenKey);
     return treeWalkParallelInner(parentObj, iterFn, childrenKey, true);
   }
@@ -93,6 +96,7 @@
     }, childrenKey);
     return rs;
   }
+
   function treeParallelToList(parent, childrenKey) {
     var rs = [];
     treeWalkParallel(parent, function (item) {
@@ -102,18 +106,18 @@
   }
 
   function listToTree(rawList) {
+    var idKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
+
     var _ref;
 
-    var idKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
     var pidKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'pid';
     var childrenKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'children';
+
     var topLevelList = []; // 最顶层的list
-
     var allMapById = {}; // 存放所有节点的引用, 用idKey值作为key, 所以idKey不能重复, 否则会被覆盖
-
     var loopList2 = []; // 临时用于存放有子节点的item
-    // 第 1 轮循环, 用 1 个 map 挂所有节点, 并找到顶级节点列表
 
+    // 第 1 轮循环, 用 1 个 map 挂所有节点, 并找到顶级节点列表
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -121,21 +125,22 @@
     try {
       for (var _iterator = rawList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var item1 = _step.value;
-        allMapById[item1[idKey]] = item1;
 
+        allMapById[item1[idKey]] = item1;
         if (item1[pidKey] === null || item1[pidKey] === undefined) {
           topLevelList.push(item1); // 没有父节点设置为顶层
         } else {
           loopList2.push(item1);
         }
-      } // 第 2 轮循环
+      }
 
+      // 第 2 轮循环, 根据 pid 找到并挂在父节点下面
     } catch (err) {
       _didIteratorError = true;
       _iteratorError = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
+        if (!_iteratorNormalCompletion && _iterator.return) {
           _iterator.return();
         }
       } finally {
@@ -145,22 +150,41 @@
       }
     }
 
-    for (var _i = 0; _i < loopList2.length; _i++) {
-      var item2 = loopList2[_i];
-      var parent = allMapById[item2[pidKey]];
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
 
-      if (parent) {
-        if (parent[childrenKey]) {
-          parent[childrenKey].push(item2); // 把自己推入父列表
+    try {
+      for (var _iterator2 = loopList2[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var item2 = _step2.value;
+
+        var parent = allMapById[item2[pidKey]];
+        if (parent) {
+          if (parent[childrenKey]) {
+            parent[childrenKey].push(item2); // 把自己推入父列表
+          } else {
+            parent[childrenKey] = [item2]; // 父列表不存在, 创建并推入
+          }
         } else {
-          parent[childrenKey] = [item2]; // 父列表不存在, 创建并推入
+          topLevelList.push(item2); // 父节点不存在, 也设置为顶层
         }
-      } else {
-        topLevelList.push(item2); // 父节点不存在, 也设置为顶层
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
       }
     }
 
-    return _ref = {}, _defineProperty(_ref, childrenKey, topLevelList), _defineProperty(_ref, "map", allMapById), _ref;
+    return _ref = {}, defineProperty(_ref, childrenKey, topLevelList), defineProperty(_ref, 'map', allMapById), _ref;
   }
 
   exports.treeWalkDeep = treeWalkDeep;
