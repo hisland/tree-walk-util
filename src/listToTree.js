@@ -18,7 +18,7 @@ export function listToTree(
     }
   }
 
-  // 第 2 轮循环
+  // 第 2 轮循环, 根据 pid 找到并挂在父节点下面
   for (const item2 of loopList2) {
     let parent = allMapById[item2[pidKey]]
     if (parent) {
