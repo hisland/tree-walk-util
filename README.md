@@ -1,27 +1,14 @@
-
 * walk through a tree data
-* convert from tree to list or list to tree.
-* tree structure base on array
-
-`fn call signature: (item, index, parent, level)`
-
-parent is:
-```
-{
-  children: []
-}
-// or
-{
-  [childrenKey]: []
-}
-```
+* convert tree -> list
+* convert list -> tree
 
 fn **do not** walk parent, just **recursion children**
 
-sample tree data:
+
+1. treeWalkDeep, treeWalkParallel:
 
 ```
-var tree = {
+const treeData = {
   children: [{
     id: 1,
     children: [{
@@ -45,10 +32,9 @@ var tree = {
     }]
   }]
 }
-```
-
-`treeWalkDeep(parent, fn, childrenKey = 'children')`:
-```
+treeWalkDeep(treeData, function (item, index, parentList, parentObj, level) {
+  // item order is below
+}, 'children')
 1o
   2o
     3o
@@ -59,8 +45,10 @@ var tree = {
   8o
 ```
 
-`treeWalkParallel(parent, fn, childrenKey = 'children')`:
 ```
+treeWalkParallel(parent, function (item, index, parentList, parentObj, level) {
+  // item order is below
+}, 'children')
 1o
   4o
     7o
@@ -72,33 +60,20 @@ var tree = {
 ```
 
 
-`treeDeepToList(parent, fn = returnInput, childrenKey)`:
-
-use `treeWalkDeep` to generate list
-
-
-`treeParallelToList(parent, fn = returnInput, childrenKey)`:
-
-use `treeWalkParallel` to generate list
-
-
-`listToTree(list, idKey = 'id', pidKey = 'pid', childrenKey = 'children')`:
-
-list is:
+2. listToTree :
 ```
-list = [
-{id: 1, pid: null},
-{id: 2, pid: null},
-{id: 3, pid: 1},
-{id: 4, pid: 2},
-{id: 5, pid: 1},
-{id: 6, pid: 3},
-{id: 7, pid: 5},
-{id: 8, pid: null},
+rawList = [
+  {id: 1, pid: null},
+  {id: 2, pid: null},
+  {id: 3, pid: 1},
+  {id: 4, pid: 2},
+  {id: 5, pid: 1},
+  {id: 6, pid: 3},
+  {id: 7, pid: 5},
+  {id: 8, pid: null},
 ]
-```
-will generate:
-```
+listToTree(rawList, id', 'pid', 'children')
+// will generate tree:
 id1
   id3
     id6
@@ -108,27 +83,3 @@ id2
   id4
 id8
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
