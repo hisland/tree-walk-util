@@ -2,9 +2,6 @@
 * convert tree -> list
 * convert list -> tree
 
-fn **do not** walk parent, just **recursion children**
-
-
 1. treeWalkDeep, treeWalkParallel:
 
 ```
@@ -72,7 +69,7 @@ rawList = [
   {id: 7, pid: 5},
   {id: 8, pid: null},
 ]
-listToTree(rawList, id', 'pid', 'children')
+listToTree(rawList, 'id', 'pid', 'children')
 // will generate tree:
 id1
   id3
