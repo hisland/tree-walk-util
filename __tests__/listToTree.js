@@ -26,6 +26,11 @@ const oldList = [
     pid: 3,
     god: 'may',
   },
+  {
+    id: 6,
+    pid: 99, // not exist, will be top level
+    god: 'isShe',
+  },
 ]
 
 test('listToTree', () => {
@@ -46,7 +51,9 @@ test('listToTree', () => {
   expect(newTree.children[0].children[1].children[0].id).toEqual(5)
   expect(newTree.children[0].children[1].children[0].god).toEqual('may')
 
-  expect(newTree.children[1]).toBeUndefined()
+  expect(newTree.children[1].id).toEqual(6)
+  expect(newTree.children[1].god).toEqual('isShe')
+  expect(newTree.children[2]).toBeUndefined()
 })
 
 // 下面是目标结果
