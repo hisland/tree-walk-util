@@ -1,5 +1,5 @@
-import { returnInput } from '../util.js'
-import { getParentObj } from '../util.js'
+import { returnInput } from '../src/util.js'
+import { getParentObj } from '../src/util.js'
 
 const oldTree = {
   foo: 'bar',

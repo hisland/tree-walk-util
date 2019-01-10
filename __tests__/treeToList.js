@@ -2,7 +2,7 @@ import {
   treeDeepToList,
   treeToList,
   treeParallelToList,
-} from '../treeToList.js'
+} from '../src/treeToList.js'
 
 const oldTree = {
   foo: 'bar',

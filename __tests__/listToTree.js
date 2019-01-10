@@ -1,4 +1,4 @@
-import { listToTree } from '../listToTree.js'
+import { listToTree } from '../src/listToTree.js'
 
 const oldList = [
   {

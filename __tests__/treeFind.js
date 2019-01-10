@@ -1,5 +1,5 @@
-import { treeDeepFind } from '../treeWalkDeep.js'
-import { treeParallelFind } from '../treeWalkParallel.js'
+import { treeDeepFind } from '../src/treeWalkDeep.js'
+import { treeParallelFind } from '../src/treeWalkParallel.js'
 
 const oldTree = {
   foo: 'bar',
