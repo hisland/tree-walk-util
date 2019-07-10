@@ -1,31 +1,11 @@
 import { listToTree } from '../src/listToTree.js'
 
 const oldList = [
-  {
-    id: 1,
-    pid: null,
-    god: 'cc',
-  },
-  {
-    id: 2,
-    pid: 1,
-    god: 'yes',
-  },
-  {
-    id: 3,
-    pid: 1,
-    god: 'test',
-  },
-  {
-    id: 4,
-    pid: 2,
-    god: 'hao',
-  },
-  {
-    id: 5,
-    pid: 3,
-    god: 'may',
-  },
+  { id: 1, pid: null, god: 'cc' },
+  { id: 2, pid: 1, god: 'yes' },
+  { id: 3, pid: 1, god: 'test' },
+  { id: 4, pid: 2, god: 'hao' },
+  { id: 5, pid: 3, god: 'may' },
   {
     id: 6,
     pid: 99, // not exist, will be top level

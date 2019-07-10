@@ -16,19 +16,19 @@ const oldTree = {
 }
 
 test('treeWalkDeep', () => {
-  treeWalkDeep(oldTree, function(v, i, p, lv) {
-    if (lv === 0 && i === 0) expect(v.some).toEqual('thing')
-    if (lv === 0 && i === 1) expect(v.yes).toEqual('ok')
-    if (lv === 1 && i === 0) expect(v).toEqual('a')
-    if (lv === 1 && i === 1) expect(v).toEqual('b')
+  treeWalkDeep(oldTree, function(val, index, p, lv) {
+    if (lv === 0 && index === 0) expect(val.some).toEqual('thing')
+    if (lv === 0 && index === 1) expect(val.yes).toEqual('ok')
+    if (lv === 1 && index === 0) expect(val).toEqual('a')
+    if (lv === 1 && index === 1) expect(val).toEqual('b')
   })
 })
 
 test('treeWalkParallel', () => {
-  treeWalkParallel(oldTree, function(v, i, p, lv) {
-    if (lv === 0 && i === 0) expect(v.some).toEqual('thing')
-    if (lv === 0 && i === 1) expect(v.yes).toEqual('ok')
-    if (lv === 1 && i === 0) expect(v).toEqual('a')
-    if (lv === 1 && i === 1) expect(v).toEqual('b')
+  treeWalkParallel(oldTree, function(val, index, p, lv) {
+    if (lv === 0 && index === 0) expect(val.some).toEqual('thing')
+    if (lv === 0 && index === 1) expect(val.yes).toEqual('ok')
+    if (lv === 1 && index === 0) expect(val).toEqual('a')
+    if (lv === 1 && index === 1) expect(val).toEqual('b')
   })
 })
