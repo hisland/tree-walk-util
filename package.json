@@ -33,5 +33,10 @@
     "rollup": "^1.16.7",
     "rollup-plugin-babel": "^4.3.3"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "ie >= 9"
+  ],
   "dependencies": {}
 }
