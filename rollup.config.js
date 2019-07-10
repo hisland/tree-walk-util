@@ -1,14 +1,9 @@
-import babel from 'rollup-plugin-babel'
+import pluginBabel from 'rollup-plugin-babel'
 
 export default [
   {
     input: 'src/index.js',
-    plugins: [
-      babel({
-        babelrc: false,
-        presets: [['babel-preset-es2015-rollup']],
-      }),
-    ],
+    plugins: [pluginBabel()],
     output: [
       {
         file: 'dist/bundle.cjs.js',
