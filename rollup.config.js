@@ -1,9 +1,9 @@
-import pluginBabel from 'rollup-plugin-babel'
+import typescript from '@rollup/plugin-typescript'
 
 export default [
   {
-    input: 'src/index.js',
-    plugins: [pluginBabel()],
+    input: 'src/index.ts',
+    plugins: [typescript()],
     output: [
       {
         file: 'dist/bundle.cjs.js',
@@ -14,11 +14,6 @@ export default [
         format: 'umd',
         name: 'treeWalkUtil',
       },
-    ],
-  },
-  {
-    input: 'src/index.js',
-    output: [
       {
         file: 'dist/bundle.esm.js',
         format: 'esm',

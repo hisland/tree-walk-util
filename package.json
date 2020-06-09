@@ -11,6 +11,7 @@
   ],
   "main": "dist/bundle.cjs.js",
   "jsnext:main": "src/index.js",
+  "types": "types.d.ts",
   "scripts": {
     "test": "jest",
     "compile": "rm -rf dist; rollup -c rollup.config.js"
@@ -25,18 +26,19 @@
   "homepage": "https://github.com/hisland/tree-walk-util",
   "author": "hisland",
   "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.5.4",
-    "@babel/preset-env": "^7.5.4",
-    "babel-jest": "^24.8.0",
-    "jest": "^24.8.0",
-    "rollup": "^1.16.7",
-    "rollup-plugin-babel": "^4.3.3"
+    "@rollup/plugin-typescript": "^4.1.2",
+    "@types/jest": "^25.2.3",
+    "jest": "^26.0.1",
+    "rollup": "^2.15.0",
+    "ts-jest": "^26.1.0",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.5"
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "ie >= 9"
-  ],
-  "dependencies": {}
+  ]
 }
