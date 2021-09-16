@@ -1,7 +1,9 @@
 {
+  "include": ["src"],
+  "exclude": [],
   "compilerOptions": {
     "baseUrl": ".",
-    // "outDir": "dist",
+    "outDir": "dist",
     "sourceMap": false,
     "target": "es5",
     "module": "es6",
@@ -14,7 +16,8 @@
     "esModuleInterop": true,
     "removeComments": false,
     "jsx": "preserve",
-    "rootDir": "."
-  },
-  "include": ["src"]
+    "rootDir": ".",
+    "declaration": true,
+    "declarationDir": "."
+  }
 }
